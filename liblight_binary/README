@@ -1,0 +1,11 @@
+This are precompiled liblights, that can be used with BacklightNotification kernels.
+These liblights do also work with non-BLN kernels - for compatibilty reasons.
+
+
+To use liblights rename it:
+eclair:	lights.default.so
+froyo:	lights.s5pc110.so
+
+and copy it to /system/lib/hw/
+
+Please include the NOTICE file to your install packages to comply with the Apache license.
