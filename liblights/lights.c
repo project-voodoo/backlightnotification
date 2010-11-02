@@ -65,7 +65,7 @@ char const*const BUTTON_FILE
         = "/sys/class/misc/melfas_touchkey/brightness";
 	
 char const*const NOTIFICATION_FILE
-        = "/sys/class/misc/melfas_touchkey/notification_led_control";
+        = "/sys/class/misc/backlightnotification/notification_led";
 	
 //end modified by neldar
 /**
@@ -136,7 +136,7 @@ set_light_buttons(struct light_device_t* dev,
     int on = is_lit(state);
     pthread_mutex_lock(&g_lock);
     g_buttons = on;
-    err = write_int(BUTTON_FILE, on?1:2);
+    err = write_int(BUTTON_FILE, on? 1 : 2);
     pthread_mutex_unlock(&g_lock);
     return err;
 }
@@ -149,7 +149,7 @@ set_light_notifications(struct light_device_t* dev,
     int on = is_lit(state);
     pthread_mutex_lock(&g_lock);
     g_buttons = on;
-    err = write_int(NOTIFICATION_FILE, on?1:2);
+    err = write_int(NOTIFICATION_FILE, on? 1 : 0);
     pthread_mutex_unlock(&g_lock);
     return err;
 }
