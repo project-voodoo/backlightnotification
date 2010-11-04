@@ -1,0 +1,15 @@
+How to build:
+download aosp from google repositories
+replace /hardware/msm7k/liblights/ with content of this directory
+build asop for dream
+
+resulting liblights is in:
+/out/target/product/dream/system/lib/hw/
+
+
+on the phone that is:
+/system/lib/hw/lights.default.so (eclair)
+/system/lib/hw/lights.s5pc110.so (froyo)
+
+
+ 
