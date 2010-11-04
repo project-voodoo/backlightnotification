@@ -1,0 +1,54 @@
+BacklightNotification function is by default disabled on boot.
+
+Please use my "BacklightNotification settings app" to enabled/disable it.
+You are allowed to distribute the free version of that app with your kernel/rom.
+
+Howto integrate BLN into your kernel:
+1. choose the patch according to your kernel version ;)
+2. patch your kernel:
+      cd <kerneldir>
+      patch -p1 -i <patchfile>
+3. Select in menuconfig under Device Drivers ---> Input device support ---> Keyboards ---> <*> Cypress touch keypad support
+   (if not already selected))
+
+To disable bln in config:
+Unselect in menuconfig under Device Drivers ---> Input device support ---> Keyboards ---> [] Cypress touch keypad: use backlight notification
+
+
+
+
+If you dont want to use the provided bln-initramfs:
+How to integrate liblights-copy-work to your initramfs:
+
+ example script for froyo:
+  
+  #!/system/bin/sh
+  if /sbin/busybox [ /res/misc/lights.s5pc110.so -nt /system/lib/hw/lights.s5pc110.so ]
+    then
+	if /sbin/busybox [ ! -f /system/lib/hw/lights.s5pc110.so.backup ]
+	    then
+		# do backup
+		cat /system/lib/hw/lights.s5pc110.so > /system/lib/hw/lights.s5pc110.so.backup
+	fi
+	# copy liblights
+	cat /res/misc/lights.s5pc110.so > /system/lib/hw/lights.s5pc110.so
+	#set permissions
+	chmod 755 /system/lib/hw/lights.s5pc110.so
+  fi
+
+You maybe need to include busybox with cat, chmod, echo and test support
+or use the toolbox distributed with samsungs firmware (not always available).
+And you need to change the liblights name for eclair.
+
+
+An always working script is this (but dangerous! no backup):
+    #!/system/bin/sh
+    cat /res/misc/lights.s5pc110.so > /system/lib/hw/lights.s5pc110.so
+    chmod 755 /system/lib/hw/lights.s5pc110.so
+    
+    
+And this is the example for the updater-script for recovery.
+ # installing lights.default.so
+ delete("/system/lib/hw/lights.default.so");
+ package_extract_dir("system", "/system");
+ set_perm(0, 0, 0644, "/system/lib/hw/lights.default.so");
