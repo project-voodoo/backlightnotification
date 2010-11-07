@@ -18,7 +18,7 @@
  */
 
 
-// #define LOG_NDEBUG 0
+//#define LOG_NDEBUG 0
 #define LOG_TAG "lights"
 
 #include <cutils/log.h>
@@ -42,13 +42,13 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 static int g_haveTrackballLight = 0;
 static struct light_state_t g_notification;
 static struct light_state_t g_battery;
-static int g_backlight = 170;		//modified by neldar
+static int g_backlight = 170;		//modified by mr
 static int g_trackball = -1;
 static int g_buttons = 0;
 static int g_attention = 0;
 
 
-// begin modified by neldar
+// begin modified by mr
 char const*const LCD_FILE
         = "/sys/class/backlight/s5p_bl/brightness";
 
@@ -67,7 +67,7 @@ char const*const BUTTON_FILE
 char const*const NOTIFICATION_FILE
         = "/sys/class/misc/backlightnotification/notification_led";
 	
-//end modified by neldar
+//end modified by mr
 /**
  * device methods
  */
@@ -136,7 +136,7 @@ set_light_buttons(struct light_device_t* dev,
     int on = is_lit(state);
     pthread_mutex_lock(&g_lock);
     g_buttons = on;
-    err = write_int(BUTTON_FILE, on? 1 : 2);
+    err = write_int(BUTTON_FILE, on?1:2);
     pthread_mutex_unlock(&g_lock);
     return err;
 }
@@ -147,9 +147,11 @@ set_light_notifications(struct light_device_t* dev,
 {
     int err = 0;
     int on = is_lit(state);
+    LOGV("%s color=%08x flashMode=%d flashOnMS=%d flashOffMS=%d\n", __func__,
+          state->color, state->flashMode, state->flashOnMS, state->flashOffMS);
     pthread_mutex_lock(&g_lock);
     g_buttons = on;
-    err = write_int(NOTIFICATION_FILE, on? 1 : 0);
+    err = write_int(NOTIFICATION_FILE, on?1:0);
     pthread_mutex_unlock(&g_lock);
     return err;
 }
@@ -182,7 +184,7 @@ static int open_lights(const struct hw_module_t* module, char const* name,
     else if (0 == strcmp(LIGHT_ID_BUTTONS, name)) {
         set_light = set_light_buttons;
     }
-#if 0 //modified by neldar
+#if 0 //modified by mr
     else if (0 == strcmp(LIGHT_ID_BATTERY, name)) {
         set_light = set_light_battery; //to notification
     }
@@ -223,9 +225,7 @@ const struct hw_module_t HAL_MODULE_INFO_SYM = {
     .version_major = 1,
     .version_minor = 0,
     .id = LIGHTS_HARDWARE_MODULE_ID,
-    //begin modified by neldar
     .name = "Samsung i9000 custom lights module",
-    .author = "Michael Richter (alias neldar)",
-    //end modified by neldar
+    .author = "Michael Richter (alias mr)",
     .methods = &lights_module_methods,
 };
