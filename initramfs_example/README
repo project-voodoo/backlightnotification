@@ -1,0 +1,50 @@
+Initramfs example for froyo:
+
+copy:
+/res/misc/lights.s5pc110.so
+/sbin/install_bln_liblights.sh
+
+into your initramfs dir and add following lines to the init.rc:
+
+
+/* begin init.rc lines */
+
+# bln - system patch run & wait
+    start blnpatch
+ 	write /data/sync_fifo sync
+
+    class_start default
+
+## Daemon processes to be run by init.
+##
+
+# bln - system patch service
+service blnpatch /sbin/install_bln_liblights.sh
+	user root
+	oneshot
+	disabled
+
+/* end init.rc lines */
+
+
+
+If you dont want to use the provided bln-initramfs example:
+
+How to integrate liblights-copy-work to your initramfs:
+
+You maybe need to include busybox with cat, chmod, echo and test support
+or use the toolbox distributed with samsungs firmware (not always available).
+And you need to change the liblights name for eclair.
+
+
+An always working script is this (but dangerous(!!!): no backup):
+    #!/system/bin/sh
+    cat /res/misc/lights.s5pc110.so > /system/lib/hw/lights.s5pc110.so
+    chmod 755 /system/lib/hw/lights.s5pc110.so
+    
+    
+And this is the example for the updater-script for recovery.
+ # installing lights.default.so
+ delete("/system/lib/hw/lights.default.so");
+ package_extract_dir("system", "/system");
+ set_perm(0, 0, 0644, "/system/lib/hw/lights.default.so"); 
