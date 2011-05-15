@@ -9,9 +9,10 @@
 #   test [-f, -gt]
 #   strings
 #   grep [-c] (no regex needed)
-#   cp
+#   $CP
 
 # TODO: modify these paths to your needs
+CP='/sbin/busybox cp'
 GREP='/sbin/busybox grep'
 STRINGS='/sbin/busybox strings'
 TEST='/sbin/busybox test'
@@ -38,14 +39,14 @@ if $TEST $($STRINGS $liblights_destdir/$liblights_name | $GREP -c backlightnotif
 #	log "no bln liblights or liblights v0 found"
 	if $TEST ! -f $liblights_destdir/${liblights_name}.backup
 	    then
-		cp $liblights_destdir/$liblights_name $liblights_destdir/${liblights_name}.backup
+		$CP $liblights_destdir/$liblights_name $liblights_destdir/${liblights_name}.backup
 #		log "old liblights backed up"
 #	    else
 # only uncomment this else, if log below also is uncomment or script will fail
 #		log "old liblights already backed up"
 	fi
 #	log "copying bln liblights"
-	cp $liblights_sourcedir/$liblights_name $liblights_destdir/
+	$CP $liblights_sourcedir/$liblights_name $liblights_destdir/
 	chmod 644 $liblights_destdir/$liblights_name
 #    else
 #	log "liblights version >= v1; nothing done"
